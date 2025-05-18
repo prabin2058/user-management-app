@@ -35,7 +35,7 @@ const AppHeader = () => {
   ];
 
   return (
-    <Header className="bg-white shadow-sm flex items-center justify-between px-6">
+    <Header className="bg-blue-400 shadow-sm flex items-center justify-between px-6">
       <div className="text-xl font-bold text-blue-600">User Management</div>
       {user && (
         <Dropdown menu={{ items }} placement="bottomRight">
