@@ -1,8 +1,22 @@
-import { Form, Input, Select, Button, message } from 'antd';
+import {
+  Form,
+  Input,
+  Select,
+  Button,
+  message,
+  Card,
+  Typography
+} from 'antd';
+import {
+  UserOutlined,
+  TeamOutlined,
+  ApartmentOutlined,
+} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
 const { Option } = Select;
+const { Title } = Typography;
 
 const UserForm = ({ initialValues, onFinish, isEdit = false }) => {
   const [form] = Form.useForm();
@@ -13,7 +27,6 @@ const UserForm = ({ initialValues, onFinish, isEdit = false }) => {
     message.error('Please correct the errors in the form!');
   };
 
-  // Custom validation for username (letters, numbers, underscores only)
   const validateUsername = (_, value) => {
     if (!value) return Promise.reject('Please input username!');
     if (!/^[a-zA-Z0-9_]+$/.test(value)) {
@@ -25,7 +38,6 @@ const UserForm = ({ initialValues, onFinish, isEdit = false }) => {
     return Promise.resolve();
   };
 
-  // Custom validation for names (letters and spaces only)
   const validateName = (_, value) => {
     if (!value) return Promise.reject('This field is required!');
     if (!/^[a-zA-Z\s]+$/.test(value)) {
@@ -38,112 +50,108 @@ const UserForm = ({ initialValues, onFinish, isEdit = false }) => {
   };
 
   return (
-    <Form
-      form={form}
-      name="userForm"
-      initialValues={initialValues}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      layout="vertical"
-      className="max-w-2xl mx-auto"
-      validateTrigger={['onChange', 'onBlur']} // Validate as user types and when leaving field
-    >
-      <Form.Item
-        label="First Name"
-        name="firstName"
-        rules={[
-          { required: true },
-          { validator: validateName }
-        ]}
-        hasFeedback
-      >
-        <Input 
-          placeholder="Enter first name" 
-          maxLength={50}
-        />
-      </Form.Item>
+    <Card className="max-w-2xl mx-auto mt-10 shadow-xl rounded-2xl p-8" bordered>
+      <Title level={3} className="text-center mb-6">
+        {isEdit ? 'Edit User' : 'Create New User'}
+      </Title>
 
-      <Form.Item
-        label="Last Name"
-        name="lastName"
-        rules={[
-          { required: true },
-          { validator: validateName }
-        ]}
-        hasFeedback
+      <Form
+        form={form}
+        name="userForm"
+        initialValues={initialValues}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        layout="vertical"
+        validateTrigger={['onChange', 'onBlur']}
       >
-        <Input 
-          placeholder="Enter last name" 
-          maxLength={50}
-        />
-      </Form.Item>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Form.Item
+            label="First Name"
+            name="firstName"
+            rules={[{ required: true }, { validator: validateName }]}
+            hasFeedback
+          >
+            <Input
+              placeholder="Enter first name"
+              prefix={<UserOutlined />}
+              maxLength={50}
+            />
+          </Form.Item>
 
-      <Form.Item
-        label="Username"
-        name="username"
-        rules={[
-          { required: true },
-          { validator: validateUsername }
-        ]}
-        hasFeedback
-        tooltip="4-20 characters, letters, numbers and underscores only"
-      >
-        <Input 
-          placeholder="Enter username" 
-          maxLength={20}
-          minLength={4}
-        />
-      </Form.Item>
+          <Form.Item
+            label="Last Name"
+            name="lastName"
+            rules={[{ required: true }, { validator: validateName }]}
+            hasFeedback
+          >
+            <Input
+              placeholder="Enter last name"
+              prefix={<UserOutlined />}
+              maxLength={50}
+            />
+          </Form.Item>
+        </div>
 
-      <Form.Item
-        label="User Type"
-        name="userType"
-        rules={[{ 
-          required: true, 
-          message: 'Please select user type!' 
-        }]}
-        hasFeedback
-      >
-        <Select placeholder="Select user type">
-          <Option value="Admin User">Admin User</Option>
-          <Option value="System User">System User</Option>
-        </Select>
-      </Form.Item>
-
-      <Form.Item
-        label="Department"
-        name="department"
-        rules={[{ 
-          required: true, 
-          message: 'Please select department!' 
-        }]}
-        hasFeedback
-      >
-        <Select placeholder="Select department">
-          <Option value="Frontend">Frontend</Option>
-          <Option value="Backend">Backend</Option>
-          <Option value="QA">QA</Option>
-          <Option value="Marketing">Marketing</Option>
-        </Select>
-      </Form.Item>
-
-      <Form.Item>
-        <Button 
-          type="primary" 
-          htmlType="submit" 
-          className="mr-4"
-          style={{ width: 120 }}
+        <Form.Item
+          label="Username"
+          name="username"
+          rules={[{ required: true }, { validator: validateUsername }]}
+          hasFeedback
+          tooltip="4-20 characters, letters, numbers and underscores only"
         >
-          {isEdit ? 'Update' : 'Create'}
-        </Button>
-        <Button 
-          onClick={() => navigate('/')}
-          style={{ width: 120 }}
+          <Input
+            placeholder="Enter username"
+            prefix={<TeamOutlined />}
+            maxLength={20}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="User Type"
+          name="userType"
+          rules={[{ required: true, message: 'Please select user type!' }]}
+          hasFeedback
         >
-          Cancel
-        </Button>
-      </Form.Item>
-    </Form>
+          <Select placeholder="Select user type">
+            <Option value="Admin User">Admin User</Option>
+            <Option value="System User">System User</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Department"
+          name="department"
+          rules={[{ required: true, message: 'Please select department!' }]}
+          hasFeedback
+        >
+          <Select placeholder="Select department" suffixIcon={<ApartmentOutlined />}>
+            <Option value="Frontend">Frontend</Option>
+            <Option value="Backend">Backend</Option>
+            <Option value="QA">QA</Option>
+            <Option value="Marketing">Marketing</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item className="text-center mt-6">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="mr-4"
+            size="large"
+            style={{ width: 140 }}
+          >
+            {isEdit ? 'Update' : 'Create'}
+          </Button>
+          <Button
+            onClick={() => navigate('/')}
+            size="large"
+            style={{ width: 140 }}
+          >
+            Cancel
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };
 
